@@ -24,47 +24,56 @@ pip install -e .[dev]
 
 ```python
 from kiteconnect import KiteConnect
+import pandas as pd
 from zerodha_talib import HistoricalClient, add_basics, add_talib
 
-kite = KiteConnect(api_key="YOUR_API_KEY")
-kite.set_access_token("YOUR_ACCESS_TOKEN")
+# Display settings
+pd.set_option('display.max_rows', 100000)
+pd.set_option('display.max_columns', 50)
+pd.set_option('display.width', None)
+
+# API credentials
+api_key = 'your api key'
+access_token = 'your access token'
+
+kite = KiteConnect(api_key=api_key)
+kite.set_access_token(access_token)
 
 client = HistoricalClient(kite)
 
+# 1) Fetch historical candles only
 df = client.fetch(
-    instrument_name="NIFTY 50",
-    exchange="NSE",
-    from_date="2010-01-01",
-    to_date="2026-02-28",
-    interval="day",
+    instrument_name='NIFTY 50',
+    exchange='NSE',
+    from_date='2010-01-01',
+    to_date='2026-02-28',
+    interval='day',
 )
 
-# Default basics: SMA_9, EMA_21, RSI_14
-df = add_basics(df)
+print('Raw OHLCV:')
+print(df.tail(5))
 
-# nubra_talib-style explicit call
-df = add_talib(
+# 2) add_basics + add_talib (nubra_talib style)
+#df = add_basics(df)
+df_ta = add_talib(
     df,
     funcs={
         "RSI": {"timeperiod": 14},
         "EMA": {"timeperiod": 21},
-        "SMA": {"timeperiod": 9},
-        # "MACD": {"fastperiod": 12, "slowperiod": 26, "signalperiod": 9},
+        "CCI": {"timeperiod": 14},
+        "MACD": {"fastperiod": 12, "slowperiod": 26, "signalperiod": 9},
     },
 )
 
-print(df.tail())
+print('\nWith indicators (add_talib):')
+print(df_ta.tail(5))
 ```
 
 ## Example Script
 
 ```bash
-set ZERODHA_API_KEY=your_api_key
 python examples/example.py
 ```
-
-`examples/example.py` reads `ZERODHA_ACCESS_TOKEN` from env, or falls back to:
-`C:\Trading\OptionAnalysis\AccessToken.txt`
 
 ## Historical Fetch Defaults
 
