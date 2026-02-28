@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zerodha-talib"
+version = "0.2.0"
+description = "Auto-batched Zerodha historical data with TA-Lib style indicators"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Aksha" }
+]
+keywords = ["zerodha", "kiteconnect", "historical", "talib", "technical-analysis"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Financial and Insurance Industry"
+]
+dependencies = [
+  "pandas>=1.5",
+  "kiteconnect>=5.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "build>=1.2",
+  "twine>=5.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/AKNavin/zerodha_talib"
+Source = "https://github.com/AKNavin/zerodha_talib"
+Issues = "https://github.com/AKNavin/zerodha_talib/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/zerodha_talib"]
